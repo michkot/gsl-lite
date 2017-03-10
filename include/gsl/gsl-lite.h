@@ -55,11 +55,11 @@
 // Configuration:
 
 #ifndef  gsl_FEATURE_HAVE_IMPLICIT_MACRO
-# define gsl_FEATURE_HAVE_IMPLICIT_MACRO  1
+# define gsl_FEATURE_HAVE_IMPLICIT_MACRO  0
 #endif
 
 #ifndef  gsl_FEATURE_HAVE_OWNER_MACRO
-# define gsl_FEATURE_HAVE_OWNER_MACRO  1
+# define gsl_FEATURE_HAVE_OWNER_MACRO  0
 #endif
 
 #ifndef  gsl_FEATURE_EXPERIMENTAL_RETURN_GUARD
