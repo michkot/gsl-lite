@@ -3,7 +3,7 @@
 # gsl-lite is based on GSL: Guideline Support Library,
 # https://github.com/microsoft/gsl
 #
-# This code is licensed under the MIT License (MIT). 
+# This code is licensed under the MIT License (MIT).
 
 cmake_minimum_required( VERSION 2.8 )
 
@@ -13,23 +13,23 @@ include_directories  ( "${PROJECT_SOURCE_DIR}/../include/gsl" )
 
 set( SOURCES gsl-lite.t.cpp assert.t.cpp at.t.cpp byte.t.cpp issue.t.cpp not_null.t.cpp owner.t.cpp span.t.cpp string_span.t.cpp util.t.cpp )
 
-add_executable (   gsl-lite.t ${SOURCES} )
 add_definitions( -Dgsl_CONFIG_CONTRACT_VIOLATION_THROWS )
 
 set( HAS_STD_FLAGS  FALSE )
 set( HAS_CPP11_FLAG FALSE )
 set( HAS_CPP14_FLAG FALSE )
+set( HAS_CPP17_FLAG FALSE )
 
-if( "${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC" )
+if( MSVC )
     add_compile_options( -W3 -EHsc -D_SCL_SECURE_NO_WARNINGS )
 
-elseif( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR
-        "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
+elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
+        CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
 
     set( HAS_STD_FLAGS TRUE )
 
     # GNU: available -std flags depends on version
-    if( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" )
+    if( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
         execute_process(
             COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
 
@@ -40,8 +40,13 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR
             if( NOT GCC_VERSION VERSION_LESS 4.9.2 )
                 set( HAS_CPP14_FLAG TRUE )
             endif()
+            if( NOT GCC_VERSION VERSION_LESS 7.1.0 )
+                set( HAS_CPP17_FLAG TRUE )
+            endif()
         endif()
     endif()
+
+    add_compile_options( -Wall -Wno-missing-braces -fno-elide-constructors -Wconversion -Wsign-conversion -Wno-string-conversion )
 
     add_executable( gsl-lite-cpp98.t ${SOURCES} )
     target_compile_options( gsl-lite-cpp98.t  PUBLIC -std=c++98 )
@@ -59,13 +64,19 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR
         target_compile_options( gsl-lite-cpp14.t  PUBLIC -std=c++14 )
     endif()
 
-    add_compile_options( -Wall -Wno-missing-braces -fno-elide-constructors )
+    if( HAS_CPP17_FLAG )
+        add_executable( gsl-lite-cpp17.t ${SOURCES} )
+        target_compile_options( gsl-lite-cpp17.t  PUBLIC -std=c++17 )
+    endif()
 
-elseif( ${CMAKE_CXX_COMPILER_ID} MATCHES "Intel" )
+elseif( CMAKE_CXX_COMPILER_ID MATCHES "Intel" )
 # as is
 else()
 # as is
 endif()
+
+add_executable( gsl-lite.t ${SOURCES} )
+target_link_libraries( gsl-lite.t gsl_lite )
 
 # configure unit tests via CTest:
 
@@ -81,6 +92,9 @@ else()
     endif()
     if( HAS_CPP14_FLAG )
         add_test( NAME test-cpp14    COMMAND gsl-lite-cpp14.t --pass )
+    endif()
+    if( HAS_CPP17_FLAG )
+        add_test( NAME test-cpp17    COMMAND gsl-lite-cpp17.t --pass )
     endif()
 endif()
 add_test(         NAME list_version  COMMAND gsl-lite.t --version )

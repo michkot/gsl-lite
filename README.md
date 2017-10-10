@@ -1,6 +1,6 @@
 # GSL Lite: Guideline Support Library for C++98, C++11 up
 
-[![Language](https://img.shields.io/badge/language-C++-blue.svg)](https://isocpp.org/)  [![Standard](https://img.shields.io/badge/c%2B%2B-98-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![Standard](https://img.shields.io/badge/c%2B%2B-11-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![Standard](https://img.shields.io/badge/c%2B%2B-14-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/martinmoene/gsl-lite.svg?branch=master)](https://travis-ci.org/martinmoene/gsl-lite) [![Build status](https://ci.appveyor.com/api/projects/status/1ha3wnxtam547m8p?svg=true)](https://ci.appveyor.com/project/martinmoene/gsl-lite) [![Version](https://badge.fury.io/gh/martinmoene%2Fgsl-lite.svg)](https://github.com/martinmoene/gsl-lite/releases) [![download](https://img.shields.io/badge/latest%20version%20%20-download-blue.svg)](https://raw.githubusercontent.com/martinmoene/gsl-lite/master/include/gsl/gsl-lite.h)
+[![Standard](https://img.shields.io/badge/c%2B%2B-98/11/14/17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/martinmoene/gsl-lite.svg?branch=master)](https://travis-ci.org/martinmoene/gsl-lite) [![Build status](https://ci.appveyor.com/api/projects/status/1ha3wnxtam547m8p?svg=true)](https://ci.appveyor.com/project/martinmoene/gsl-lite) [![Version](https://badge.fury.io/gh/martinmoene%2Fgsl-lite.svg)](https://github.com/martinmoene/gsl-lite/releases) [![download](https://img.shields.io/badge/latest%20version%20%20-download-blue.svg)](https://raw.githubusercontent.com/martinmoene/gsl-lite/master/include/gsl/gsl-lite.h) [![Try it online](https://img.shields.io/badge/try%20it-online-blue.svg)](https://wandbox.org/permlink/9QbCOOpzMYMriM9c) [![Godbolt online](https://img.shields.io/badge/godbolt-online-blue.svg)](https://godbolt.org/g/iEAxnY)
 
 
 GSL Lite is based on the [Microsoft Guideline Support Library (GSL)](https://github.com/microsoft/gsl). 
@@ -331,8 +331,8 @@ at(): Allows to access existing std::array elements (C++11)
 at(): Allows to access existing std::vector elements
 at(): Allows to access std::initializer_list elements (C++11)
 at(): Allows to access gsl::span elements
-byte: Allows to construct from integral via static cast (C++11)
-byte: Allows to construct from integral via byte() (C++11)
+byte: Allows to construct from integral via static cast (C++17)
+byte: Allows to construct from integral via byte() (C++17)
 byte: Allows to construct from integral via to_byte()
 byte: Allows to convert to integral via to_integer()
 byte: Allows comparison operations
@@ -364,6 +364,8 @@ not_null<>: Allows to construct from a not_null related pointer type
 not_null<>: Allows assignment from a not_null related pointer type
 not_null<>: Allows assignment from a non-null bare recast pointer
 not_null<>: Allows implicit conversion to underlying type
+not_null<>: Allows indirect member access
+not_null<>: Allows dereferencing
 owner<>: Allows its use as the (pointer) type it stands for
 Owner(): Allows its use as the (pointer) type it stands for
 span<>: Disallows construction from a temporary value (C++11) (define gsl_CONFIG_CONFIRMS_COMPILATION_ERRORS)
@@ -553,6 +555,10 @@ ensure_z(): Allows to build a wstring_span from a non-const wide C-string
 ensure_z(): Allows to build a cwstring_span from a non-const wide C-string
 ensure_z(): Allows to build a cwstring_span from a const wide C-string
 ensure_z(): Allows to specify ultimate location of the sentinel and ensure its presence
+operator<<: Allows printing a string_span to an output stream
+operator<<: Allows printing a cstring_span to an output stream
+operator<<: Allows printing a wstring_span to an output stream
+operator<<: Allows printing a cwstring_span to an output stream
 finally: Allows to run lambda on leaving scope
 finally: Allows to run function (bind) on leaving scope
 finally: Allows to run function (pointer) on leaving scope

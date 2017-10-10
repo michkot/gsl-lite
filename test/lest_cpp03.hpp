@@ -35,7 +35,7 @@
 # pragma GCC   diagnostic ignored "-Wunused-value"
 #endif
 
-#define  lest_VERSION "1.28.0"
+#define  lest_VERSION "1.30.1"
 
 #ifndef  lest_FEATURE_COLOURISE
 # define lest_FEATURE_COLOURISE 0
@@ -85,9 +85,7 @@
 # define lest_COMPILER_IS_MSVC6  1
 #endif
 
-#if ( __cplusplus >= 201103L ) || lest_COMPILER_MSVC_VERSION >= 12
-# define lest_CPP11_OR_GREATER  1
-#endif
+#define lest_CPP11_OR_GREATER  ((__cplusplus >= 201103L ) || lest_COMPILER_MSVC_VERSION >= 12)
 
 #if lest_CPP11_OR_GREATER || lest_COMPILER_MSVC_VERSION >= 10
 
@@ -187,9 +185,6 @@ namespace lest
 #define lest_THEN(     story   )  lest_SECTION( lest::text(   " Then: ") + story   )
 #define lest_AND_WHEN( story   )  lest_SECTION( lest::text(   "  And: ") + story   )
 #define lest_AND_THEN( story   )  lest_SECTION( lest::text(   "  And: ") + story   )
-
-#define lest_TEST \
-    lest_CASE
 
 #define lest_CASE( specification, proposition ) \
     static void lest_FUNCTION( lest::env & ); \
@@ -454,6 +449,11 @@ public:
     friend bool operator == ( approx const & lhs, double rhs ) { return  operator==( rhs, lhs ); }
     friend bool operator != ( double lhs, approx const & rhs ) { return !operator==( lhs, rhs ); }
     friend bool operator != ( approx const & lhs, double rhs ) { return !operator==( rhs, lhs ); }
+
+    friend bool operator <= ( double lhs, approx const & rhs ) { return lhs < rhs.magnitude_ || lhs == rhs; }
+    friend bool operator <= ( approx const & lhs, double rhs ) { return lhs.magnitude_ < rhs || lhs == rhs; }
+    friend bool operator >= ( double lhs, approx const & rhs ) { return lhs > rhs.magnitude_ || lhs == rhs; }
+    friend bool operator >= ( approx const & lhs, double rhs ) { return lhs.magnitude_ > rhs || lhs == rhs; }
 
 private:
     double epsilon_;
@@ -1023,7 +1023,7 @@ inline void shuffle( tests & specification, options option )
 #if lest_CPP11_OR_GREATER
     std::shuffle( specification.begin(), specification.end(), std::mt19937( option.seed ) );
 #else
-    lest::srand( option.seed );
+    lest::srand( static_cast<unsigned int>( option.seed ) );
 
     rng generator;
     std::random_shuffle( specification.begin(), specification.end(), generator );
@@ -1032,7 +1032,7 @@ inline void shuffle( tests & specification, options option )
 
 inline int stoi( text num )
 {
-    return lest::strtol( num.c_str(), NULL, 10 );
+    return static_cast<int>( lest::strtol( num.c_str(), NULL, 10 ) );
 }
 
 inline bool is_number( text arg )
